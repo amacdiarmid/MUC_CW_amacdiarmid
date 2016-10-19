@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/frontPage"
+        android:title="@string/frontFeed" />
+
+    <item android:id="@+id/worldPage"
+        android:title="@string/worldFeed" />
+
+    <item android:id="@+id/ukPage"
+        android:title="@string/ukFeed" />
+
+    <item android:id="@+id/busPage"
+        android:title="@string/businessFeed" />
+
+    <item android:id="@+id/polPage"
+        android:title="@string/politicsFeed" />
+
+    <item android:id="@+id/healPage"
+        android:title="@string/healthFeed" />
+
+    <item android:id="@+id/savedPage"
+        android:title="@string/savedFeed" />
+
+    <item android:id="@+id/weatherPage"
+        android:title="@string/weatherFeed" />
+</menu>

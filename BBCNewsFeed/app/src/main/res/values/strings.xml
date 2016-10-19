@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">BBCNewsFeed</string>
+    <string name="frontFeed">front page</string>
+    <string name="worldFeed">world</string>
+    <string name="ukFeed">UK</string>
+    <string name="businessFeed">business</string>
+    <string name="politicsFeed">politics</string>
+    <string name="healthFeed">health</string>
+    <string name="savedFeed">saved reports</string>
+    <string name="weatherFeed">weather</string>
 </resources>
