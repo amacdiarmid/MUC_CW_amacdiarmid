@@ -11,5 +11,5 @@ public enum Feeds
     UK,
     Business,
     Politics,
-    health,
+    Health,
 }

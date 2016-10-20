@@ -15,7 +15,8 @@ public class ActivityFeed extends AppCompatActivity {
 
     RSSParser parser;
 
-    TextView textView;
+    TextView heading;
+    TextView URL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,27 +40,30 @@ public class ActivityFeed extends AppCompatActivity {
         switch (toParse)
         {
             case "FrontPage":
-                parser = new RSSParser(Feeds.FrontPage);
+                parser = new RSSParser(Feeds.FrontPage, this);
                 break;
             case "World":
-                parser = new RSSParser(Feeds.World);
+                parser = new RSSParser(Feeds.World, this);
                 break;
             case "UK":
-                parser = new RSSParser(Feeds.UK);
+                parser = new RSSParser(Feeds.UK, this);
                 break;
             case "Business":
-                parser = new RSSParser(Feeds.Business);
+                parser = new RSSParser(Feeds.Business, this);
                 break;
             case "Politics":
-                parser = new RSSParser(Feeds.Politics);
+                parser = new RSSParser(Feeds.Politics, this);
                 break;
-            case "health":
-                parser = new RSSParser(Feeds.health);
+            case "Health":
+                parser = new RSSParser(Feeds.Health, this);
                 break;
         }
 
-        textView = (TextView)findViewById(R.id.textView);
-        textView.setText(toParse);
+        heading = (TextView)findViewById(R.id.tvHeading);
+        heading.setText(toParse);
+
+        URL = (TextView)findViewById(R.id.tvURL);
+        URL.setText(parser.URL);
 
     }
 
@@ -121,7 +125,7 @@ public class ActivityFeed extends AppCompatActivity {
                 return true;
             case R.id.healPage:
                 //show different menus
-                activFeed.putExtra("FeedToParse", Feeds.health.toString());
+                activFeed.putExtra("FeedToParse", Feeds.Health.toString());
                 setResult(Activity.RESULT_OK);
                 finish();
                 startActivity(activFeed);

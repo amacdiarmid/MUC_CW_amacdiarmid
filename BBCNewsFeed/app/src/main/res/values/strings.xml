@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BBCNewsFeed</string>
+    <string name="app_name">BBC News</string>
     <string name="frontFeed">front page</string>
     <string name="worldFeed">world</string>
     <string name="ukFeed">UK</string>

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.healPage:
                 //show different menus
-                activFeed.putExtra("FeedToParse", Feeds.health.toString());
+                activFeed.putExtra("FeedToParse", Feeds.Health.toString());
                 startActivity(activFeed);
                 return true;
             case R.id.savedPage:
