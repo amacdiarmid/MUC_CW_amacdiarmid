@@ -25,4 +25,45 @@
         android:layout_below="@+id/tvHeading"
         android:layout_alignParentStart="true"
         android:id="@+id/tvURL" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TestTitle"
+        android:layout_below="@+id/tvURL"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TestTitle"
+        android:layout_alignParentStart="true"
+        android:id="@+id/TestDescription" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TestDescription"
+        android:layout_alignParentStart="true"
+        android:id="@+id/testLink" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/testLink"
+        android:layout_alignParentStart="true"
+        android:id="@+id/TestData" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TestData"
+        android:layout_alignParentStart="true"
+        android:id="@+id/ProgBar" />
+
 </RelativeLayout>
