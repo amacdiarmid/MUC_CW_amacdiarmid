@@ -8,7 +8,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -27,6 +31,8 @@ public class ActivityFeed extends AppCompatActivity {
 
     ProgressBar progressBar;
 
+    ListView listView;
+
     String ErrorMesg;
 
     @Override
@@ -42,6 +48,7 @@ public class ActivityFeed extends AppCompatActivity {
         link = (TextView)findViewById(R.id.testLink);
         Date = (TextView)findViewById(R.id.TestData);
         progressBar = (ProgressBar)findViewById(R.id.ProgBar);
+        listView = (ListView) findViewById(R.id.newsList);
 
         //action bar
         android.support.v7.app.ActionBar ccActionBar = getSupportActionBar();
@@ -178,6 +185,10 @@ public class ActivityFeed extends AppCompatActivity {
                     e.printStackTrace();
                     ErrorView(e.toString());
                 }
+
+                newsItem[] array = parser.articles.toArray(new newsItem[parser.articles.size()]);
+                ListAdapter adapter = new NewsAdapter(getApplicationContext(), array);
+                listView.setAdapter(adapter);
 
             }
         });
