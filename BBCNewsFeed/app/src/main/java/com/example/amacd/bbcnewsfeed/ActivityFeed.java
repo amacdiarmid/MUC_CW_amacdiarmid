@@ -2,24 +2,19 @@ package com.example.amacd.bbcnewsfeed;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.service.quicksettings.Tile;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 public class ActivityFeed extends AppCompatActivity {
 
-    RSSParser parser;
+    RSSParserNews parser;
 
     TextView heading;
     TextView URL;
@@ -67,22 +62,22 @@ public class ActivityFeed extends AppCompatActivity {
         switch (toParse)
         {
             case "FrontPage":
-                parser = new RSSParser(Feeds.FrontPage, this, this);
+                parser = new RSSParserNews(Feeds.FrontPage, this, this);
                 break;
             case "World":
-                parser = new RSSParser(Feeds.World, this, this);
+                parser = new RSSParserNews(Feeds.World, this, this);
                 break;
             case "UK":
-                parser = new RSSParser(Feeds.UK, this, this);
+                parser = new RSSParserNews(Feeds.UK, this, this);
                 break;
             case "Business":
-                parser = new RSSParser(Feeds.Business, this, this);
+                parser = new RSSParserNews(Feeds.Business, this, this);
                 break;
             case "Politics":
-                parser = new RSSParser(Feeds.Politics, this, this);
+                parser = new RSSParserNews(Feeds.Politics, this, this);
                 break;
             case "Health":
-                parser = new RSSParser(Feeds.Health, this, this);
+                parser = new RSSParserNews(Feeds.Health, this, this);
                 break;
         }
         progressBar.setMax(10);

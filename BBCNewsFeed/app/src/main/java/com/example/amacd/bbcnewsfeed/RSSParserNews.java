@@ -1,7 +1,6 @@
 package com.example.amacd.bbcnewsfeed;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -19,7 +18,7 @@ import java.util.List;
  * modified by me
  */
 
-public class RSSParser
+public class RSSParserNews
 {
     public Feeds curFeed = Feeds.FrontPage;
     public String URLstring = "";
@@ -30,12 +29,12 @@ public class RSSParser
     public boolean finished = false;
     ActivityFeed mainActivity = null;
 
-    public RSSParser(Feeds feeds, Context context, ActivityFeed Activ)
+    public RSSParserNews(Feeds feeds, Context context, ActivityFeed Activ)
     {
         curFeed = feeds;
         mainActivity = Activ;
 
-        databaseMGR dbMGR = new databaseMGR(context, "NewsFeeds.s3db", null, 1);
+        newsDatabaseMGR dbMGR = new newsDatabaseMGR(context, "NewsFeeds.s3db", null, 1);
         try
         {
             dbMGR.dbCreate();

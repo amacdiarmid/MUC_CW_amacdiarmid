@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 //show different menus
                 return true;
             case R.id.weatherPage:
-                //show different menus
+                activFeed = new Intent(getApplicationContext(), WeatherActivity.class);
+                startActivity(activFeed);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

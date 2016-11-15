@@ -1,12 +1,16 @@
 package com.example.amacd.bbcnewsfeed;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.Cursor;
-import android.database.SQLException;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,27 +19,29 @@ import java.io.OutputStream;
 import java.util.Locale;
 
 /**
- * Created by amacd on 19/10/2016.
+ * Created by amacd on 10/11/2016.
  */
 
 //this is just the code bobby gave us
-public class databaseMGR extends SQLiteOpenHelper
+public class weatherDatebaseMGR extends SQLiteOpenHelper
 {
     //stuff
     private static final int DB_VER = 1;
     //path and file name
     private static final String DB_Path = "/data/data/com.example.amacd.bbcnewsfeed/databases/";
-    private static final String DB_Name = "NewsFeeds.s3db";
+    private static final String DB_Name = "WeatherFeeds.s3db";
     //table name
-    private static final String TBL_NewsFeeds = "Feeds";
-    //column names
-    private static final String COL_FeedID = "FeedID";
-    private static final String COL_FeedName = "FeedName";
-    private static final String COL_FeedURL = "FeedURL";
+    private static final String TBL_WeatherFeeds = "Weather";
+    //column names weather
+    private static final String COL_WeatherID = "ID";
+    private static final String COL_WeatherCity = "WeatherCity";
+    private static final String COL_WeatherLatitude = "WeatherLatitude";
+    private static final String COL_WeatherLongitude = "WeatherLongitude";
+    private static final String COL_WeatherRSS = "WeatherRSS";
 
     private Context appContext;
 
-    public databaseMGR(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
+    public weatherDatebaseMGR(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
     {
         super(context, name, factory, version);
         this.appContext = context;
@@ -45,8 +51,8 @@ public class databaseMGR extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        String CREATE_NEWSFEEDS_TABLE = "CREATE TABLE IF NOT EXISTS " + TBL_NewsFeeds + "("
-                + COL_FeedID + " INTEGER PRIMARY KEY, " + COL_FeedName + " TEXT, " + COL_FeedURL + " TEXT" + ")";
+        String CREATE_NEWSFEEDS_TABLE = "CREATE TABLE IF NOT EXISTS " + TBL_WeatherFeeds + "("
+                + COL_WeatherID + " INTEGER PRIMARY KEY, " + COL_WeatherCity + " TEXT, " + COL_WeatherLatitude + " TEXT, " + COL_WeatherLongitude + " TEXT, " + COL_WeatherRSS + " TEXT" + ")";
         db.execSQL(CREATE_NEWSFEEDS_TABLE);
     }
 
@@ -56,7 +62,7 @@ public class databaseMGR extends SQLiteOpenHelper
     {
         if (newVersion > oldVersion)
         {
-            db.execSQL("DROP TABLE IF EXISTS " + TBL_NewsFeeds);
+            db.execSQL("DROP TABLE IF EXISTS " + TBL_WeatherFeeds);
             onCreate(db);
         }
     }
@@ -87,6 +93,7 @@ public class databaseMGR extends SQLiteOpenHelper
         try
         {
             String dbPath = DB_Path + DB_Name;
+            String testPath = appContext.getDatabasePath(DB_Name).getPath();
             db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
             db.setLocale(Locale.getDefault());
             db.setVersion(1);
@@ -134,24 +141,28 @@ public class databaseMGR extends SQLiteOpenHelper
     }
 
     //find info in the db
-    public String getFeedURL (Feeds feed)
+    public CityInfo getCityInfo (int id)
     {
-        String query = "select * FROM " + TBL_NewsFeeds + " WHERE " + COL_FeedName + " =  \"" + feed.toString() + "\"";
+        String query = "select * FROM " + TBL_WeatherFeeds + " WHERE " + COL_WeatherCity + " =  \"" + "Glasgow" + "\"";
 
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(query, null);
 
-        String URL = "";
+        CityInfo cityInfo = new CityInfo();
 
+        String debug = db.toString();
+        String deb1 = DatabaseUtils.dumpCursorToString(cursor);
         if (cursor.moveToFirst())
         {
             cursor.moveToFirst();
-            URL = cursor.getString(2);
+            cityInfo.name = cursor.getString(1);
+            cityInfo.position = new LatLng(cursor.getFloat(2),cursor.getFloat(3));
+            cityInfo.Feed = cursor.getString(4);
             cursor.close();
         }
 
         db.close();
-        return URL;
+        return cityInfo;
     }
 }

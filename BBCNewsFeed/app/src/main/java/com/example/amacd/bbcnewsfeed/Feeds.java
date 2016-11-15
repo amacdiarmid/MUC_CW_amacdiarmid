@@ -12,4 +12,5 @@ public enum Feeds
     Business,
     Politics,
     Health,
+    Weather,
 }
