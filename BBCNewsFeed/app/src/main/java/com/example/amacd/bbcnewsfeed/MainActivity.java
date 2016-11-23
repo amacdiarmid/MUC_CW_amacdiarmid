@@ -3,19 +3,26 @@ package com.example.amacd.bbcnewsfeed;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.PaintDrawable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Spinner;
 
 public class MainActivity extends AppCompatActivity {
 
+    //preferences
     SharedPreferences sharedPreferences;
     SaveData savedData;
 
@@ -23,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //action bar
         android.support.v7.app.ActionBar ccActionBar = getSupportActionBar();
@@ -36,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         //preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         savedData = new SaveData(sharedPreferences);
+
+        //canvas
+        setContentView(new MainSurfaceView(this));
     }
 
     //create action bar with options
@@ -102,4 +113,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
+
+
 }

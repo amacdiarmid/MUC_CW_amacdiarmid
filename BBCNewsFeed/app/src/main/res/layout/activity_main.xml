@@ -11,5 +11,10 @@
     tools:context="com.example.amacd.bbcnewsfeed.MainActivity">
 
 
-
+    <SurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/surfaceView" />
 </RelativeLayout>
