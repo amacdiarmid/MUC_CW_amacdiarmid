@@ -2,6 +2,8 @@ package com.example.amacd.bbcnewsfeed;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,6 +31,9 @@ public class ActivityFeed extends AppCompatActivity {
     ListView listView;
 
     String ErrorMesg;
+
+    SharedPreferences sharedPreferences;
+    SaveData savedData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,9 @@ public class ActivityFeed extends AppCompatActivity {
 
         URL.setText(parser.URLstring);
 
+        //preferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        savedData = new SaveData(sharedPreferences);
     }
 
 
@@ -156,8 +164,14 @@ public class ActivityFeed extends AppCompatActivity {
                 //show different menus
                 return true;
             case R.id.weatherPage:
-                //show different menus
+                activFeed = new Intent(getApplicationContext(), WeatherActivity.class);
+                finish();
+                startActivity(activFeed);
                 return true;
+            case R.id.SettingsPage:
+                activFeed = new Intent(getApplicationContext(), SettingsActivity.class);
+                finish();
+                startActivity(activFeed);
             default:
                 return super.onOptionsItemSelected(item);
 

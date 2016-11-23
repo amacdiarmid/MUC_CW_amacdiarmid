@@ -1,13 +1,25 @@
 <resources>
     <string name="app_name">BBC News</string>
-    <string name="frontFeed">front page</string>
-    <string name="worldFeed">world</string>
+    <string name="frontFeed">Front page</string>
+    <string name="worldFeed">World</string>
     <string name="ukFeed">UK</string>
-    <string name="businessFeed">business</string>
-    <string name="politicsFeed">politics</string>
-    <string name="healthFeed">health</string>
-    <string name="savedFeed">saved reports</string>
-    <string name="weatherFeed">weather</string>
+    <string name="businessFeed">Business</string>
+    <string name="politicsFeed">Politics</string>
+    <string name="healthFeed">Health</string>
+    <string name="savedFeed">Saved reports</string>
+    <string name="weatherFeed">Weather</string>
+    <string name="settingsPage">Settings</string>
     <string name="title_activity_detailed_news">DetailedNews</string>
     <string name="title_activity_weather">Map</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string-array name="Map_array">
+        <item>roadmap</item>
+        <item>satellite</item>
+        <item>hybrid</item>
+        <item>terrain</item>
+    </string-array>
+
+
+    <!-- Strings related to Settings -->
 </resources>

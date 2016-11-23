@@ -141,9 +141,9 @@ public class weatherDatebaseMGR extends SQLiteOpenHelper
     }
 
     //find info in the db
-    public CityInfo getCityInfo (int id)
+    public CityInfo getCityInfo (String city)
     {
-        String query = "select * FROM " + TBL_WeatherFeeds + " WHERE " + COL_WeatherCity + " =  \"" + "Glasgow" + "\"";
+        String query = "select * FROM " + TBL_WeatherFeeds + " WHERE " + COL_WeatherCity + " =  \"" + city + "\"";
 
         SQLiteDatabase db = this.getReadableDatabase();
 

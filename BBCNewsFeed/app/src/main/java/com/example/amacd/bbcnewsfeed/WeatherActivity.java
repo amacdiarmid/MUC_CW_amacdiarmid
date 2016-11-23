@@ -1,15 +1,25 @@
 package com.example.amacd.bbcnewsfeed;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ForwardingListener;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.identity.intents.AddressConstants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -18,6 +28,8 @@ import java.io.IOException;
 public class WeatherActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    SharedPreferences sharedPreferences;
+    SaveData savedData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +48,11 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
             ccActionBar.setLogo(R.mipmap.globe_icon);
             ccActionBar.setDisplayUseLogoEnabled(true);
         }
+
+
+        //preferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        savedData = new SaveData(sharedPreferences);
     }
 
     //create action bar with options
@@ -46,6 +63,69 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         inflater.inflate(R.menu.action_bar, menu);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    //selecting menu item on actionbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        //create intent to pass the feed that needs to be parsed
+        Intent activFeed = new Intent(getApplicationContext(), ActivityFeed.class);
+        switch (item.getItemId())
+        {
+            //depending what option is selected it will set the intent and start a new activity
+            case R.id.frontPage:
+                //show different menus
+                activFeed.putExtra("FeedToParse", Feeds.FrontPage.toString());
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.worldPage:
+                //show different menus
+                activFeed.putExtra("FeedToParse", Feeds.World.toString());
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.ukPage:
+                //show different menus
+                activFeed.putExtra("FeedToParse", Feeds.UK.toString());
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.busPage:
+                //show different menus
+                activFeed.putExtra("FeedToParse", Feeds.Business.toString());
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.polPage:
+                //show different menus
+                activFeed.putExtra("FeedToParse", Feeds.Politics.toString());
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.healPage:
+                //show different menus
+                activFeed.putExtra("FeedToParse", Feeds.Health.toString());
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.savedPage:
+                //show different menus
+                return true;
+            case R.id.weatherPage:
+                activFeed = new Intent(getApplicationContext(), WeatherActivity.class);
+                finish();
+                startActivity(activFeed);
+                return true;
+            case R.id.SettingsPage:
+                activFeed = new Intent(getApplicationContext(), SettingsActivity.class);
+                finish();
+                startActivity(activFeed);
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
 
@@ -66,7 +146,9 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         LatLng UKCamera = new LatLng(55.3781, -3.4360);
         //mMap.addMarker(new MarkerOptions().position(new LatLng(55.8642, -4.2518)).title("Marker in Glasgow"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(UKCamera));
+        mMap.getUiSettings().setRotateGesturesEnabled(false);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(5));
+        mMap.setMapType(savedData.getMapType());
 
         weatherDatebaseMGR dbMGR = new weatherDatebaseMGR(this, "WeatherFeeds.s3db", null, 1);
         try
@@ -78,18 +160,64 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         }
 
         CityInfo cityInfo = new CityInfo();
-        cityInfo = dbMGR.getCityInfo(0);
-        cityInfo.FetchFeed(this, mMap);
+        for (Cities city : Cities.values())
+        {
+            cityInfo = dbMGR.getCityInfo(city.toString());
+            cityInfo.FetchFeed(this, mMap);
+        }
     }
 
     public void addMarker(final CityInfo city)
     {
         runOnUiThread(new Runnable() {
             public void run() {
+
+                float rotation = 0;
+
+                switch (city.direction)
+                {
+                    case South: rotation = 0;
+                        break;
+                    case SouthWest: rotation = 45;
+                        break;
+                    case West: rotation = 90;
+                        break;
+                    case NorthWest: rotation = 135;
+                        break;
+                    case North: rotation = 180;
+                        break;
+                    case NorthEast: rotation = 225;
+                        break;
+                    case East: rotation = 270;
+                        break;
+                    case SouthEast: rotation = 315;
+                        break;
+                    default: Toast.makeText(getBaseContext(), "error in " + city.name + " marker", Toast.LENGTH_LONG);
+                }
+
                 if(mMap != null) {
+
+                    BitmapDescriptor marker = null;
+                    int temp = Integer.parseInt(city.temperature.split("°C")[0]);
+
+                    if (temp > 0)
+                    {
+                        marker = BitmapDescriptorFactory.fromResource(R.mipmap.arrow_yellow);
+                    }
+                    else if (temp > 10)
+                    {
+                        marker = BitmapDescriptorFactory.fromResource(R.mipmap.arrow_red);
+                    }
+                    else
+                    {
+                        marker = BitmapDescriptorFactory.fromResource(R.mipmap.arrow_blue);
+                    }
+
                     mMap.addMarker(new MarkerOptions()
                             .position(city.position)
-                            .title(city.name + ", " + city.direction + ", " + city.Speed + ", " + city.temperature));
+                            .title(city.name + ", " + city.direction + ", " + city.Speed + ", " + city.temperature)
+                            .icon(marker)
+                            .rotation(rotation));
                 }
             }
         });
