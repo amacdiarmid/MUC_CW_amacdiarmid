@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_detailed_news"
     android:layout_width="match_parent"
@@ -8,45 +9,47 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.amacd.bbcnewsfeed.DetailedNews">
+    tools:context="com.example.amacd.bbcnewsfeed.DetailedNewsActivity">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleTV"
-        android:layout_below="@+id/titleTV"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTV"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/descriptionTV" />
+        android:weightSum="1">
 
-    <Button
-        android:text="Save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/descriptionTV"
-        android:layout_alignParentStart="true"
-        android:id="@+id/saveButton" />
+        <TextView
+            android:text="titleTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleTV"
+            android:layout_above="@+id/dateTV"
+            android:layout_alignParentStart="true"
+            android:textStyle="normal|bold"
+            android:textAlignment="center" />
 
-    <Button
-        android:text="Web"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/saveButton"
-        android:layout_alignParentStart="true"
-        android:id="@+id/webButton" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="134dp"
+            app:srcCompat="@drawable/bbc_news_logo"
+            android:id="@+id/ImageView"
+            android:layout_weight="0.23" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/webButton"
-        android:layout_alignParentStart="true"
-        android:id="@+id/dateTV" />
+        <TextView
+            android:text="descriptionTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/descriptionTV"
+            android:layout_below="@+id/titleTV"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="dateTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dateTV" />
+
+    </LinearLayout>
+
 </RelativeLayout>

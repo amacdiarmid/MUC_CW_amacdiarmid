@@ -1,9 +1,7 @@
 package com.example.amacd.bbcnewsfeed;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +31,13 @@ class NewsAdapter extends ArrayAdapter<newsItem>
         button.setText(news.title);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent activFeed = new Intent(getContext(), DetailedNews.class);
+                Intent activFeed = new Intent(getContext(), DetailedNewsActivity.class);
                 activFeed.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 activFeed.putExtra("newsTitle", news.title);
                 activFeed.putExtra("newsDes", news.description);
                 activFeed.putExtra("newsData", news.pubData);
                 activFeed.putExtra("newsLink", news.link);
+                activFeed.putExtra("newsImage",news.ImageURL);
                 getContext(). startActivity(activFeed);
             }
         });

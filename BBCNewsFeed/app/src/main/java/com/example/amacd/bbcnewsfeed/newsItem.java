@@ -10,4 +10,5 @@ public class newsItem {
     String description = "";
     String link = "";
     String pubData = "";
+    String ImageURL = "";
 }

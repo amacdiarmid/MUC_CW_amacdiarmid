@@ -1,17 +1,11 @@
 package com.example.amacd.bbcnewsfeed;
 
-import android.content.Context;
-import android.widget.Toast;
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by amacd on 14/11/2016.
@@ -23,7 +17,7 @@ public class RSSParserWeather
 
     private XmlPullParserFactory xmlPullParserFactory;
 
-    ActivityFeed mainActivity = null;
+    FeedActivity mainActivity = null;
 
     CityInfo curCity;
 

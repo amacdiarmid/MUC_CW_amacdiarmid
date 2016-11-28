@@ -1,8 +1,9 @@
 package com.example.amacd.bbcnewsfeed;
 
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,11 +12,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-
-import java.security.PublicKey;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -25,6 +23,9 @@ public class SettingsActivity extends AppCompatActivity {
     Switch DarkMode;
     SharedPreferences sharedPreferences;
     SaveData savedData;
+
+    //about dialog
+    FragmentManager aboutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,9 @@ public class SettingsActivity extends AppCompatActivity {
         //preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         savedData = new SaveData(sharedPreferences);
+
+        //aboutDialog
+        aboutDialog = this.getFragmentManager();
     }
 
     //create action bar with options
@@ -80,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item)
     {
         //create intent to pass the feed that needs to be parsed
-        Intent activFeed = new Intent(getApplicationContext(), ActivityFeed.class);
+        Intent activFeed = new Intent(getApplicationContext(), FeedActivity.class);
         switch (item.getItemId())
         {
             //depending what option is selected it will set the intent and start a new activity
@@ -140,6 +144,11 @@ public class SettingsActivity extends AppCompatActivity {
                 saveData();
                 finish();
                 startActivity(activFeed);
+                return true;
+            case R.id.about:
+                DialogFragment aboutDlg= new AboutDialog();
+                aboutDlg.show(aboutDialog, "menu");
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 

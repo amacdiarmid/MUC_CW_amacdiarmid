@@ -27,9 +27,9 @@ public class RSSParserNews
 
     public List<newsItem> articles = new ArrayList<>();
     public boolean finished = false;
-    ActivityFeed mainActivity = null;
+    FeedActivity mainActivity = null;
 
-    public RSSParserNews(Feeds feeds, Context context, ActivityFeed Activ)
+    public RSSParserNews(Feeds feeds, Context context, FeedActivity Activ)
     {
         curFeed = feeds;
         mainActivity = Activ;
@@ -130,6 +130,10 @@ public class RSSParserNews
                                 curItem.pubData = text;
                                 articles.add(curItem);
                                 mainActivity.incrProg();
+                            }
+                            else if(name.contains("media:thumbnail"))
+                            {
+                                curItem.ImageURL = myParser.getAttributeValue(2);
                             }
                         }
                         break;

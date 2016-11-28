@@ -1,19 +1,17 @@
 package com.example.amacd.bbcnewsfeed;
 
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ForwardingListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.identity.intents.AddressConstants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +28,9 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     SharedPreferences sharedPreferences;
     SaveData savedData;
+
+    //about dialog
+    FragmentManager aboutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,9 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         //preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         savedData = new SaveData(sharedPreferences);
+
+        //aboutDialog
+        aboutDialog = this.getFragmentManager();
     }
 
     //create action bar with options
@@ -70,7 +74,7 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
     public boolean onOptionsItemSelected(MenuItem item)
     {
         //create intent to pass the feed that needs to be parsed
-        Intent activFeed = new Intent(getApplicationContext(), ActivityFeed.class);
+        Intent activFeed = new Intent(getApplicationContext(), FeedActivity.class);
         switch (item.getItemId())
         {
             //depending what option is selected it will set the intent and start a new activity
@@ -122,6 +126,11 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
                 activFeed = new Intent(getApplicationContext(), SettingsActivity.class);
                 finish();
                 startActivity(activFeed);
+                return true;
+            case R.id.about:
+                DialogFragment aboutDlg= new AboutDialog();
+                aboutDlg.show(aboutDialog, "menu");
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
