@@ -1,5 +1,6 @@
 package com.example.amacd.bbcnewsfeed;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -7,29 +8,31 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
-import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.IOException;
+public class FavActivity extends AppCompatActivity {
 
-public class WeatherActivity extends AppCompatActivity implements OnMapReadyCallback {
+    TextView Error;
 
-    private GoogleMap mMap;
+    ProgressBar progressBar;
+
+    ListView listView;
+
+    String ErrorMesg;
 
     //about dialog
     FragmentManager aboutDialog;
@@ -40,14 +43,18 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
     //sound and vibration
     Vibrator vibrator;
 
+    List<savedInfo> savedInfos = new ArrayList<savedInfo>();
+    savedDatabaseMGR dbMGR = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        setContentView(R.layout.activity_fav);
+
+        //bind views
+        Error = (TextView)findViewById(R.id.ErrorTV);
+        progressBar = (ProgressBar)findViewById(R.id.ProcBar);
+        listView = (ListView) findViewById(R.id.newsList);
 
         //action bar
         android.support.v7.app.ActionBar ccActionBar = getSupportActionBar();
@@ -58,6 +65,7 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
             ccActionBar.setDisplayUseLogoEnabled(true);
         }
 
+        Error.setText("loading");
 
         //preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -67,6 +75,11 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         aboutDialog = this.getFragmentManager();
 
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+
+        dbMGR = new savedDatabaseMGR(this, "SavedNews.s3db", null, 1);
+        dbMGR.setActivity(this);
+
+        SearchingView();
     }
 
     //create action bar with options
@@ -75,8 +88,7 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar, menu);
-
-        menu.findItem(R.id.weatherPage).setVisible(false);
+        menu.findItem(R.id.savedPage).setVisible(false);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -100,46 +112,47 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         switch (item.getItemId())
         {
             //depending what option is selected it will set the intent and start a new activity
+            //this will close the current activity then open a new one
             case R.id.frontPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.FrontPage.toString());
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.worldPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.World.toString());
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.ukPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.UK.toString());
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.busPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Business.toString());
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.polPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Politics.toString());
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.healPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Health.toString());
                 finish();
-                startActivity(activFeed);
-                return true;
-            case R.id.savedPage:
-                //show different menus
-                activFeed = new Intent(getApplicationContext(), FavActivity.class);
-                finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.weatherPage:
@@ -161,97 +174,62 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng UKCamera = new LatLng(55.3781, -3.4360);
-        //mMap.addMarker(new MarkerOptions().position(new LatLng(55.8642, -4.2518)).title("Marker in Glasgow"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(UKCamera));
-        mMap.getUiSettings().setRotateGesturesEnabled(false);
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(5));
-        mMap.setMapType(savedData.getMapType());
-
-        weatherDatebaseMGR dbMGR = new weatherDatebaseMGR(this, "WeatherFeeds.s3db", null, 1);
-        try
-        {
-            dbMGR.dbCreate();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        CityInfo cityInfo = new CityInfo();
-        for (Cities city : Cities.values())
-        {
-            cityInfo = dbMGR.getCityInfo(city.toString());
-            cityInfo.FetchFeed(this, mMap);
-        }
-    }
-
-    public void addMarker(final CityInfo city)
+    public void ErrorView(String error)
     {
+        ErrorMesg = error;
         runOnUiThread(new Runnable() {
+            @Override
             public void run() {
-
-                float rotation = 0;
-
-                switch (city.direction)
+                try {
+                    Error.setText(ErrorMesg);
+                }
+                catch (Exception e)
                 {
-                    case South: rotation = 0;
-                        break;
-                    case SouthWest: rotation = 45;
-                        break;
-                    case West: rotation = 90;
-                        break;
-                    case NorthWest: rotation = 135;
-                        break;
-                    case North: rotation = 180;
-                        break;
-                    case NorthEast: rotation = 225;
-                        break;
-                    case East: rotation = 270;
-                        break;
-                    case SouthEast: rotation = 315;
-                        break;
-                    default: Toast.makeText(getBaseContext(), "error in " + city.name + " marker", Toast.LENGTH_LONG);
+                    e.printStackTrace();
+                    ErrorView(e.toString());
                 }
 
-                if(mMap != null) {
+            }
+        });
+    }
 
-                    BitmapDescriptor marker = null;
-                    int temp = Integer.parseInt(city.temperature.split("°C")[0]);
-
-                    if (temp > 0)
+    public void SearchingView()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Error.setText("Searching");
+                    savedInfos = dbMGR.getAllSaved();
+                    if (savedInfos.size() == 0)
                     {
-                        marker = BitmapDescriptorFactory.fromResource(R.mipmap.arrow_yellow);
-                    }
-                    else if (temp > 10)
-                    {
-                        marker = BitmapDescriptorFactory.fromResource(R.mipmap.arrow_red);
+                        progressBar.setVisibility(View.INVISIBLE);
                     }
                     else
                     {
-                        marker = BitmapDescriptorFactory.fromResource(R.mipmap.arrow_blue);
+                        updateView();
                     }
-
-                    mMap.addMarker(new MarkerOptions()
-                            .position(city.position)
-                            .title(city.name + ", " + city.direction + ", " + city.Speed + ", " + city.temperature)
-                            .icon(marker)
-                            .rotation(rotation));
                 }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    ErrorView(e.toString());
+                }
+
+            }
+        });
+    }
+
+    public void updateView()
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                savedInfo[] info = savedInfos.toArray(new savedInfo[savedInfos.size()]);
+                ListAdapter adapter = new SavedAdapter(getApplicationContext(), info);
+                listView.setAdapter(adapter);
+                progressBar.setVisibility(View.INVISIBLE);
+                Error.setVisibility(View.INVISIBLE);
             }
         });
     }

@@ -2,11 +2,18 @@ package com.example.amacd.bbcnewsfeed;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Vibrator;
+import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.InputStream;
 
@@ -32,6 +40,12 @@ public class DetailedNewsActivity extends AppCompatActivity {
     FragmentManager aboutDialog;
 
     String link;
+
+    //preferences
+    SharedPreferences sharedPreferences;
+    SaveData savedData;
+    //sound and vibration
+    Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +77,14 @@ public class DetailedNewsActivity extends AppCompatActivity {
         new DownloadImageTask((ImageView)findViewById(R.id.ImageView))
             .execute(intent.getStringExtra("newsImage"));
 
+        //preferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        savedData = new SaveData(sharedPreferences);
 
         //aboutDialog
         aboutDialog = this.getFragmentManager();
+
+        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     //create action bar with options
@@ -81,6 +100,16 @@ public class DetailedNewsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
+        if (!savedData.isDisableVibration())
+        {
+            vibrator.vibrate(500);
+        }
+        if (!savedData.isDisableAudio())
+        {
+            final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+        }
+
         switch (menuItem.getItemId())
         {
             case R.id.about:
@@ -89,14 +118,32 @@ public class DetailedNewsActivity extends AppCompatActivity {
                 return true;
             case R.id.saveOption:
                 //save to preferences or somthing
+                savenews();
                 return true;
             case R.id.WebOption:
                 //open website
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                 startActivity(browserIntent);
                 return true;
+            case R.id.SettingsPage:
+                //open settings
+                Intent SettingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(SettingsIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
+    }
+
+    public void savenews()
+    {
+        savedDatabaseMGR dbMGR = new savedDatabaseMGR(this, "SavedNews.s3db", null, 1);
+        savedInfo info = new savedInfo();
+        info.title = titleTV.getText().toString();
+        info.URL = link;
+        dbMGR.addFav(info);
+        //toast
+        Toast toast = new Toast(this);
+        toast.makeText(this, "news saved", Toast.LENGTH_SHORT).show();
     }
 }

@@ -19,6 +19,7 @@
     <string name="WeatherAbout">Tap the arrow to view more information for a city. Arrow shows wind direction, colour red greater than 10°C, orange between 0°C and 10, blue less than 0°C </string>
     <string name="SettingsAbout">personalize you experience with the app.</string>
     <string name="DetailedAbout">Press the web button to open this news in your web browser, press save to save this piece of news for reading latter.</string>
+    <string name="SavedAbout">This shows all the news links you have saved, if any. Tap a view to open this article in your web browser</string>
     <string name="ErrorAbout">Sorry there was an error loading the dialog.</string>
 
     <string-array name="Map_array">

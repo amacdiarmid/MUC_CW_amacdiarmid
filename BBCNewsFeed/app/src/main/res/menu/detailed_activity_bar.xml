@@ -13,4 +13,7 @@
     <item android:id="@+id/saveOption"
         android:title="Save News" />
 
+    <item android:id="@+id/SettingsPage"
+        android:title="@string/settingsPage" />
+
 </menu>

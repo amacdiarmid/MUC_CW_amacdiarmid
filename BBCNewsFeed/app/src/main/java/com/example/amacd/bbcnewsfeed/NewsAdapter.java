@@ -2,6 +2,7 @@ package com.example.amacd.bbcnewsfeed;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ class NewsAdapter extends ArrayAdapter<newsItem>
                 getContext(). startActivity(activFeed);
             }
         });
+        button.setBackgroundColor(Color.RED);
 
         return customView;
     }

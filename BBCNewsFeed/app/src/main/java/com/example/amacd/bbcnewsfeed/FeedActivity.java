@@ -3,14 +3,19 @@ package com.example.amacd.bbcnewsfeed;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -20,13 +25,7 @@ public class FeedActivity extends AppCompatActivity {
 
     RSSParserNews parser;
 
-    TextView heading;
-    TextView URL;
-
-    TextView title;
-    TextView desc;
-    TextView link;
-    TextView Date;
+    TextView Error;
 
     ProgressBar progressBar;
 
@@ -34,11 +33,14 @@ public class FeedActivity extends AppCompatActivity {
 
     String ErrorMesg;
 
-    SharedPreferences sharedPreferences;
-    SaveData savedData;
-
     //about dialog
     FragmentManager aboutDialog;
+
+    //preferences
+    SharedPreferences sharedPreferences;
+    SaveData savedData;
+    //sound and vibration
+    Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +48,8 @@ public class FeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_feed);
 
         //bind views
-        heading = (TextView)findViewById(R.id.tvHeading);
-        URL = (TextView)findViewById(R.id.tvURL);
-        title = (TextView)findViewById(R.id.TestTitle);
-        desc = (TextView)findViewById(R.id.TestDescription);
-        link = (TextView)findViewById(R.id.testLink);
-        Date = (TextView)findViewById(R.id.TestData);
-        progressBar = (ProgressBar)findViewById(R.id.ProgBar);
+        Error = (TextView)findViewById(R.id.ErrorTV);
+        progressBar = (ProgressBar)findViewById(R.id.ProcBar);
         listView = (ListView) findViewById(R.id.newsList);
 
         //action bar
@@ -93,9 +90,7 @@ public class FeedActivity extends AppCompatActivity {
         progressBar.setMax(10);
         progressBar.setProgress(0);
 
-        heading.setText(toParse);
-
-        URL.setText(parser.URLstring);
+        Error.setText(toParse);
 
         //preferences
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -103,6 +98,8 @@ public class FeedActivity extends AppCompatActivity {
 
         //aboutDialog
         aboutDialog = this.getFragmentManager();
+
+        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
     }
 
 
@@ -113,6 +110,31 @@ public class FeedActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar, menu);
 
+        Intent intent = getIntent();
+        String toParse = intent.getStringExtra("FeedToParse");
+        //see what the feed it and hide that option
+        switch (toParse)
+        {
+            case "FrontPage":
+                menu.findItem(R.id.frontPage).setVisible(false);
+                break;
+            case "World":
+                menu.findItem(R.id.worldPage).setVisible(false);
+                break;
+            case "UK":
+                menu.findItem(R.id.ukPage).setVisible(false);
+                break;
+            case "Business":
+                menu.findItem(R.id.busPage).setVisible(false);
+                break;
+            case "Politics":
+                menu.findItem(R.id.polPage).setVisible(false);
+                break;
+            case "Health":
+                menu.findItem(R.id.healPage).setVisible(false);
+                break;
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -120,6 +142,16 @@ public class FeedActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        if (!savedData.isDisableVibration())
+        {
+            vibrator.vibrate(500);
+        }
+        if (!savedData.isDisableAudio())
+        {
+            final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+        }
+
         //create intent to pass the feed that needs to be parsed
         Intent activFeed = new Intent(getApplicationContext(), FeedActivity.class);
         switch (item.getItemId())
@@ -129,47 +161,49 @@ public class FeedActivity extends AppCompatActivity {
             case R.id.frontPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.FrontPage.toString());
-                setResult(Activity.RESULT_OK);
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.worldPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.World.toString());
-                setResult(Activity.RESULT_OK);
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.ukPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.UK.toString());
-                setResult(Activity.RESULT_OK);
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.busPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Business.toString());
-                setResult(Activity.RESULT_OK);
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.polPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Politics.toString());
-                setResult(Activity.RESULT_OK);
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.healPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Health.toString());
-                setResult(Activity.RESULT_OK);
                 finish();
+                setResult(Activity.RESULT_OK);
                 startActivity(activFeed);
                 return true;
             case R.id.savedPage:
-                //show different menus
+                activFeed = new Intent(getApplicationContext(), FavActivity.class);
+                finish();
+                startActivity(activFeed);
                 return true;
             case R.id.weatherPage:
                 activFeed = new Intent(getApplicationContext(), WeatherActivity.class);
@@ -178,7 +212,6 @@ public class FeedActivity extends AppCompatActivity {
                 return true;
             case R.id.SettingsPage:
                 activFeed = new Intent(getApplicationContext(), SettingsActivity.class);
-                finish();
                 startActivity(activFeed);
                 return true;
             case R.id.about:
@@ -196,22 +229,11 @@ public class FeedActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    title.setText(parser.articles.get(0).title);
-                    desc.setText(parser.articles.get(0).description);
-                    link.setText(parser.articles.get(0).link);
-                    Date.setText(parser.articles.get(0).pubData);
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                    ErrorView(e.toString());
-                }
-
                 newsItem[] array = parser.articles.toArray(new newsItem[parser.articles.size()]);
                 ListAdapter adapter = new NewsAdapter(getApplicationContext(), array);
                 listView.setAdapter(adapter);
-
+                progressBar.setVisibility(View.INVISIBLE);
+                Error.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -222,7 +244,7 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    title.setText("Searching");
+                    Error.setText("Searching");
                 }
                 catch (Exception e)
                 {
@@ -241,7 +263,7 @@ public class FeedActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    title.setText(ErrorMesg);
+                    Error.setText(ErrorMesg);
                 }
                 catch (Exception e)
                 {

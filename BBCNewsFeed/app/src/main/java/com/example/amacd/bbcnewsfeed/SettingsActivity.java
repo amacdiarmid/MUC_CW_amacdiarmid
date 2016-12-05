@@ -2,8 +2,12 @@ package com.example.amacd.bbcnewsfeed;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,11 +25,15 @@ public class SettingsActivity extends AppCompatActivity {
     Switch Audio;
     Switch vibration;
     Switch DarkMode;
-    SharedPreferences sharedPreferences;
-    SaveData savedData;
 
     //about dialog
     FragmentManager aboutDialog;
+
+    //preferences
+    SharedPreferences sharedPreferences;
+    SaveData savedData;
+    //sound and vibration
+    Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         //aboutDialog
         aboutDialog = this.getFragmentManager();
+
+        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     //create action bar with options
@@ -76,6 +86,8 @@ public class SettingsActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_bar, menu);
 
+        menu.findItem(R.id.SettingsPage).setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -83,6 +95,17 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        saveData();
+        if (!savedData.isDisableVibration())
+        {
+            vibrator.vibrate(500);
+        }
+        if (!savedData.isDisableAudio())
+        {
+            final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+        }
+
         //create intent to pass the feed that needs to be parsed
         Intent activFeed = new Intent(getApplicationContext(), FeedActivity.class);
         switch (item.getItemId())
@@ -91,57 +114,47 @@ public class SettingsActivity extends AppCompatActivity {
             case R.id.frontPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.FrontPage.toString());
-                saveData();
                 finish();
                 startActivity(activFeed);
                 return true;
             case R.id.worldPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.World.toString());
-                saveData();
                 finish();
                 startActivity(activFeed);
                 return true;
             case R.id.ukPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.UK.toString());
-                saveData();
                 finish();
                 startActivity(activFeed);
                 return true;
             case R.id.busPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Business.toString());
-                saveData();
                 finish();
                 startActivity(activFeed);
                 return true;
             case R.id.polPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Politics.toString());
-                saveData();
                 finish();
                 startActivity(activFeed);
                 return true;
             case R.id.healPage:
                 //show different menus
                 activFeed.putExtra("FeedToParse", Feeds.Health.toString());
-                saveData();
                 finish();
                 startActivity(activFeed);
                 return true;
             case R.id.savedPage:
                 //show different menus
-                return true;
-            case R.id.weatherPage:
-                activFeed = new Intent(getApplicationContext(), WeatherActivity.class);
-                saveData();
+                activFeed = new Intent(getApplicationContext(), FavActivity.class);
                 finish();
                 startActivity(activFeed);
                 return true;
-            case R.id.SettingsPage:
-                activFeed = new Intent(getApplicationContext(), SettingsActivity.class);
-                saveData();
+            case R.id.weatherPage:
+                activFeed = new Intent(getApplicationContext(), WeatherActivity.class);
                 finish();
                 startActivity(activFeed);
                 return true;

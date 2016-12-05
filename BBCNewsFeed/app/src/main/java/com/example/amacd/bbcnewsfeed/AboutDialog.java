@@ -39,6 +39,10 @@ public class AboutDialog extends DialogFragment
         {
             AboutDialog.setMessage(R.string.WeatherAbout);
         }
+        else if (getActivity().getClass() == FavActivity.class)
+        {
+            AboutDialog.setMessage(R.string.SavedAbout);
+        }
         else
         {
             AboutDialog.setMessage(R.string.ErrorAbout);
