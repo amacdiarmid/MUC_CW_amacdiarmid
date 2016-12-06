@@ -1,5 +1,6 @@
 package com.example.amacd.bbcnewsfeed;
 
+import android.content.Context;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -149,7 +150,13 @@ public class CityInfo {
             }
         }
 
-        activity.addMarker(this);
+        try
+        {
+            activity.addMarker(this);
+        }catch(Exception e)
+        {
+            Toast.makeText(activity.getBaseContext(), "Error with " + name, Toast.LENGTH_SHORT);
+        }
     }
 
 }

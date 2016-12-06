@@ -231,7 +231,15 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
                 if(mMap != null) {
 
                     BitmapDescriptor marker = null;
-                    int temp = Integer.parseInt(city.temperature.split("°C")[0]);
+
+                    int temp = 1;
+                    try
+                    {
+                        temp = Integer.parseInt(city.temperature.split("°C")[0]);
+                    }catch(Exception e)
+                    {
+                        Toast.makeText(getBaseContext(), "Error with " + city.name, Toast.LENGTH_SHORT);
+                    }
 
                     if (temp > 0)
                     {
