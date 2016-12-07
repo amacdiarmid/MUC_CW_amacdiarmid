@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+//activity to show the current news in the selected RSS feed
 public class FeedActivity extends AppCompatActivity {
 
     RSSParserNews parser;
@@ -224,6 +225,7 @@ public class FeedActivity extends AppCompatActivity {
         }
     }
 
+    //when the parsing is finished set the list adapter with all the newsItem objects
     public void updateView()
     {
         runOnUiThread(new Runnable() {
@@ -238,6 +240,7 @@ public class FeedActivity extends AppCompatActivity {
         });
     }
 
+    //set the error text to say it is currently searching
     public void SearchingView()
     {
         runOnUiThread(new Runnable() {
@@ -256,6 +259,7 @@ public class FeedActivity extends AppCompatActivity {
         });
     }
 
+    //set the error text view with a string
     public void ErrorView(String error)
     {
         ErrorMesg = error;
@@ -275,6 +279,7 @@ public class FeedActivity extends AppCompatActivity {
         });
     }
 
+    //incrament the progress bar with each parsed xml news article
     public void incrProg()
     {
         progressBar.incrementProgressBy(1);

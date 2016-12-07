@@ -22,7 +22,7 @@ import java.util.Locale;
  * Created by amacd on 10/11/2016.
  */
 
-//this is just the code bobby gave us
+//this is just the code bobby gave us in the lab with the searching and SQL code changed. used for the weaather RSS feeds
 public class weatherDatebaseMGR extends SQLiteOpenHelper
 {
     //stuff
@@ -140,9 +140,10 @@ public class weatherDatebaseMGR extends SQLiteOpenHelper
         }
     }
 
-    //find info in the db
+    //pass in the city name in find the RSS
     public CityInfo getCityInfo (String city)
     {
+        //select all from table where city name = city
         String query = "select * FROM " + TBL_WeatherFeeds + " WHERE " + COL_WeatherCity + " =  \"" + city + "\"";
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -153,6 +154,7 @@ public class weatherDatebaseMGR extends SQLiteOpenHelper
 
         String debug = db.toString();
         String deb1 = DatabaseUtils.dumpCursorToString(cursor);
+        //if there is a result set the city info params and return the object
         if (cursor.moveToFirst())
         {
             cursor.moveToFirst();

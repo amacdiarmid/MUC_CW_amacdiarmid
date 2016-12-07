@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+//main activity is a home screen that is drawn to canvas
 public class MainActivity extends AppCompatActivity {
 
     //preferences
@@ -26,8 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     //about dialog
     FragmentManager aboutDialog;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        //see if sound or vibration has been disabled
         if (!savedData.isDisableVibration())
         {
             vibrator.vibrate(500);
@@ -147,8 +147,4 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
-
-
 }

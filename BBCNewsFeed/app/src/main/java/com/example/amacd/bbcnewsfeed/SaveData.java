@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
  * Created by amacd on 23/11/2016.
  */
 
+//code mostly from saved preferences lab
 public class SaveData
 {
     boolean disableAudio;
@@ -16,6 +17,7 @@ public class SaveData
 
     public SaveData(SharedPreferences prefs)
     {
+        //try to get current preferences if none set defaults
         try
         {
             this.sharedPreferences = prefs;
@@ -24,6 +26,7 @@ public class SaveData
         {
             setDefaults();
         }
+        //get the values and set them as variables
         disableAudio = sharedPreferences.getBoolean("SP_Audio", false);
         disableVibration = sharedPreferences.getBoolean("SP_Vibration", false);
         darkMode = sharedPreferences.getBoolean("SP_Dark", false);
@@ -47,6 +50,7 @@ public class SaveData
         return mapType;
     }
 
+    //save a bool
     public void savePreferences(String key, boolean value)
     {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -54,6 +58,7 @@ public class SaveData
         editor.commit();
     }
 
+    //save an int
     public void savePreferences(String key, int value)
     {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -61,6 +66,7 @@ public class SaveData
         editor.commit();
     }
 
+    //set the defaults to false and 0
     void setDefaults()
     {
         savePreferences("SP_Audio",false);

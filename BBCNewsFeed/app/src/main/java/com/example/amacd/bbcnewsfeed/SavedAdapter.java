@@ -14,6 +14,7 @@ import android.widget.Button;
  * Created by amacd on 05/12/2016.
  */
 
+//adapter for viewing all the saved news
 class SavedAdapter extends ArrayAdapter<savedInfo> {
 
     SavedAdapter(Context context, savedInfo[] savedItems)
@@ -29,6 +30,7 @@ class SavedAdapter extends ArrayAdapter<savedInfo> {
         final savedInfo news = getItem(position);
         Button button = (Button) customView.findViewById(R.id.NewsButton);
 
+        //on button press create a new intent to open the view in a web browser
         button.setText(news.title);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -37,6 +39,7 @@ class SavedAdapter extends ArrayAdapter<savedInfo> {
                 getContext().startActivity(browserIntent);
             }
         });
+        //set button colour for consistency
         button.setBackgroundColor(Color.RED);
 
         return customView;

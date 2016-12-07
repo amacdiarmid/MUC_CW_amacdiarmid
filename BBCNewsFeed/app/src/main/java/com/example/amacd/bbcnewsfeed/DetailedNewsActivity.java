@@ -97,9 +97,11 @@ public class DetailedNewsActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    //on menu button selected
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
+        //is sound or vibration turned on in settings
         if (!savedData.isDisableVibration())
         {
             vibrator.vibrate(500);
@@ -110,6 +112,7 @@ public class DetailedNewsActivity extends AppCompatActivity {
             tg.startTone(ToneGenerator.TONE_PROP_BEEP);
         }
 
+        //find what option was selected
         switch (menuItem.getItemId())
         {
             case R.id.about:
@@ -135,6 +138,7 @@ public class DetailedNewsActivity extends AppCompatActivity {
         }
     }
 
+    //if the save button was pressed get the information from the news and save it to the database
     public void savenews()
     {
         savedDatabaseMGR dbMGR = new savedDatabaseMGR(this, "SavedNews.s3db", null, 1);

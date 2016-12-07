@@ -15,6 +15,7 @@ import java.io.InputStream;
  * Created by amacd on 28/11/2016.
  */
 
+//this will take a URL and then download the image in the background and set the image in a imageview
 //http://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 {

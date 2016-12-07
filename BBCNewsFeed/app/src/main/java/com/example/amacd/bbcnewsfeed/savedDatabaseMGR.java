@@ -20,6 +20,7 @@ import java.util.Locale;
  * Created by amacd on 05/12/2016.
  */
 
+//this is just the code bobby gave us in the lab with the searching and SQL code changed. used for the saved news
 public class savedDatabaseMGR extends SQLiteOpenHelper
 {
     //stuff
@@ -137,9 +138,10 @@ public class savedDatabaseMGR extends SQLiteOpenHelper
         }
     }
 
-    //find info in the db
+    //find everything in the database and put them into a list and return it
     public List<savedInfo> getAllSaved ()
     {
+        //select all from table
         String query = "select * FROM " + TBL_savedNews;
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -148,16 +150,20 @@ public class savedDatabaseMGR extends SQLiteOpenHelper
 
         List<savedInfo> savedInfos = new ArrayList<savedInfo>();
 
+        //if there is one entry in the table start looping or post a message in the error text view saying no news
         if (cursor.moveToFirst())
         {
+            //move to the first record and set the variables of a savedinfo object
             cursor.moveToFirst();
             savedInfo info = new savedInfo();
             info.title = cursor.getString(1);
             info.URL = cursor.getString(2);
             savedInfos.add(info);
 
+            //while cursor is not at the last record
             while (!cursor.isLast())
             {
+                //if it can move to the next one and set the variable for a saveInfo object
                 if (cursor.moveToNext())
                 {
                     //cursor.moveToNext();
@@ -165,6 +171,7 @@ public class savedDatabaseMGR extends SQLiteOpenHelper
                     info.title = cursor.getString(1);
                     info.URL = cursor.getString(2);
                 }
+                //if error set record as error and default to BBC homepage
                 else
                 {
                     info.title = "ERROR";
@@ -177,11 +184,13 @@ public class savedDatabaseMGR extends SQLiteOpenHelper
         {
             activity.ErrorView("no saved news");
         }
+        //when finished return list
         cursor.close();
         db.close();
         return savedInfos;
     }
 
+    //if a news articel is to be saved pass in the saved info object and add its details to the database
     public void addFav(savedInfo info)
     {
         ContentValues values = new ContentValues();
@@ -194,6 +203,7 @@ public class savedDatabaseMGR extends SQLiteOpenHelper
         db.close();
     }
 
+    //set the activity because i needed to for something
     public void setActivity(FavActivity act)
     {
         activity = act;

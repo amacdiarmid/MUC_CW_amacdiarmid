@@ -95,7 +95,10 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        //when leaving activity save the preferences
         saveData();
+
+        //see if the sound or vibration has been turned off
         if (!savedData.isDisableVibration())
         {
             vibrator.vibrate(500);

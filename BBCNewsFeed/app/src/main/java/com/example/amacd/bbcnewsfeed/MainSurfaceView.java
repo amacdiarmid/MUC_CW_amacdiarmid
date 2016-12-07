@@ -9,6 +9,7 @@ import android.view.SurfaceView;
  * Created by amacd on 23/11/2016.
  */
 
+//bobbys surface view set up code
 public class MainSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 {
     SurfaceHolder surfaceHolder;

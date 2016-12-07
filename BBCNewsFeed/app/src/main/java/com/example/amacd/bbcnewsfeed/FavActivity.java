@@ -24,6 +24,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+//activity to view saved news urls
 public class FavActivity extends AppCompatActivity {
 
     TextView Error;
@@ -65,6 +66,7 @@ public class FavActivity extends AppCompatActivity {
             ccActionBar.setDisplayUseLogoEnabled(true);
         }
 
+        //set error text view with loading
         Error.setText("loading");
 
         //preferences
@@ -76,6 +78,7 @@ public class FavActivity extends AppCompatActivity {
 
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
 
+        //create the database MGR containing all the saved news
         dbMGR = new savedDatabaseMGR(this, "SavedNews.s3db", null, 1);
         dbMGR.setActivity(this);
 
@@ -97,6 +100,7 @@ public class FavActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        //is if sound or virbration is turned on
         if (!savedData.isDisableVibration())
         {
             vibrator.vibrate(500);
@@ -174,6 +178,7 @@ public class FavActivity extends AppCompatActivity {
         }
     }
 
+    //set the error text with a message
     public void ErrorView(String error)
     {
         ErrorMesg = error;
@@ -193,6 +198,7 @@ public class FavActivity extends AppCompatActivity {
         });
     }
 
+    //search the created database for all the saved news
     public void SearchingView()
     {
         runOnUiThread(new Runnable() {
@@ -220,6 +226,7 @@ public class FavActivity extends AppCompatActivity {
         });
     }
 
+    //hide the loading bar and the error text and set the list adapter with all the found records from the database
     public void updateView()
     {
         runOnUiThread(new Runnable() {

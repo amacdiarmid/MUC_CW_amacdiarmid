@@ -10,6 +10,7 @@ import android.view.SurfaceHolder;
  * Created by amacd on 23/11/2016.
  */
 
+//mostly bobbys canvas lab code but with the drawing functions changed
 public class MainCanvasThread extends Thread
 {
     int canvasWidth;

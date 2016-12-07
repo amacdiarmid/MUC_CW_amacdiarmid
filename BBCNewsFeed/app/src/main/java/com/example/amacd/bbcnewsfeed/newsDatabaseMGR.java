@@ -19,7 +19,7 @@ import java.util.Locale;
  * Created by amacd on 19/10/2016.
  */
 
-//this is just the code bobby gave us
+//this is just the code bobby gave us in the lab with the searching and SQL code changed
 public class newsDatabaseMGR extends SQLiteOpenHelper
 {
     //stuff
@@ -139,6 +139,7 @@ public class newsDatabaseMGR extends SQLiteOpenHelper
     //find info in the db
     public String getFeedURL (Feeds feed)
     {
+        //select all rows from table where feed name = feed name
         String query = "select * FROM " + TBL_NewsFeeds + " WHERE " + COL_FeedName + " =  \"" + feed.toString() + "\"";
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -147,6 +148,7 @@ public class newsDatabaseMGR extends SQLiteOpenHelper
 
         String URL = "";
 
+        //there should only be one row so get it and grab the URL
         if (cursor.moveToFirst())
         {
             cursor.moveToFirst();

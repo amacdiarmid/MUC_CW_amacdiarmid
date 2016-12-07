@@ -11,6 +11,8 @@ import java.net.URL;
  * Created by amacd on 14/11/2016.
  */
 
+//https://www.tutorialspoint.com/android/android_rss_reader.htm
+//rss parser for the weather feeds
 public class RSSParserWeather
 {
     public String URLstring = "";
@@ -28,6 +30,7 @@ public class RSSParserWeather
         fetchXML();
     }
 
+    //fetch the RSS from the internet
     private void fetchXML()
     {
         Thread thread = new Thread(new Runnable() {
@@ -64,6 +67,7 @@ public class RSSParserWeather
         thread.start();
     }
 
+    //parse the XML retrieved from the RSS
     private boolean parseXMLAndStore(XmlPullParser myParser)
     {
         int event;
@@ -79,6 +83,7 @@ public class RSSParserWeather
                 String name = myParser.getName();
                 switch (event)
                 {
+                    //if start tag is item set it isReady to true so it can get the description
                     case XmlPullParser.START_TAG:
                         if(name.equals("item"))
                         {
@@ -88,6 +93,7 @@ public class RSSParserWeather
                     case XmlPullParser.TEXT:
                         text = myParser.getText();
                         break;
+                    //when getting the text from the description take the text and split it into its different sections
                     case XmlPullParser.END_TAG:
                         if (isReady == true)
                         {

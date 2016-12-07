@@ -15,6 +15,7 @@ import com.example.amacd.bbcnewsfeed.MainActivity;
 
 public class AboutDialog extends DialogFragment
 {
+    //when creating the dialog view see what the current activity class is and set the dialog message.
     @Override
     public Dialog onCreateDialog (Bundle savedInstanceState)
     {

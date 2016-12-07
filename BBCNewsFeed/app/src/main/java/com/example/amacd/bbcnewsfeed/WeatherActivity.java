@@ -225,7 +225,7 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
                         break;
                     case SouthEast: rotation = 315;
                         break;
-                    default: Toast.makeText(getBaseContext(), "error in " + city.name + " marker", Toast.LENGTH_LONG);
+                    default: Toast.makeText(getBaseContext(), "error in " + city.name + " marker", Toast.LENGTH_LONG).show();
                 }
 
                 if(mMap != null) {
@@ -238,7 +238,7 @@ public class WeatherActivity extends AppCompatActivity implements OnMapReadyCall
                         temp = Integer.parseInt(city.temperature.split("°C")[0]);
                     }catch(Exception e)
                     {
-                        Toast.makeText(getBaseContext(), "Error with " + city.name, Toast.LENGTH_SHORT);
+                        Toast.makeText(getBaseContext(), "Error with " + city.name, Toast.LENGTH_SHORT).show();
                     }
 
                     if (temp > 0)

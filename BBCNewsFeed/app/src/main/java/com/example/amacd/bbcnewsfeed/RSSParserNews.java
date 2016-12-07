@@ -14,10 +14,10 @@ import java.util.List;
 
 /**
  * Created by amacd on 19/10/2016.
- * code from tutorials point https://www.tutorialspoint.com/android/android_rss_reader.htm
- * modified by me
  */
 
+//https://www.tutorialspoint.com/android/android_rss_reader.htm
+//rss parser for the news feeds
 public class RSSParserNews
 {
     public Feeds curFeed = Feeds.FrontPage;
@@ -34,6 +34,7 @@ public class RSSParserNews
         curFeed = feeds;
         mainActivity = Activ;
 
+        //create the database that contains all the RSS feeds for news
         newsDatabaseMGR dbMGR = new newsDatabaseMGR(context, "NewsFeeds.s3db", null, 1);
         try
         {
@@ -43,6 +44,7 @@ public class RSSParserNews
             e.printStackTrace();
         }
 
+        //search the database for the URL
         URLstring = dbMGR.getFeedURL(feeds);
         finished = false;
 
@@ -50,6 +52,7 @@ public class RSSParserNews
         fetchXML();
     }
 
+    //create a runnable to fetch the RSS feed from the internet
     private void fetchXML()
     {
         Thread thread = new Thread(new Runnable() {
@@ -86,6 +89,7 @@ public class RSSParserNews
         thread.start();
     }
 
+    //when the RSS has been retrieved parse it into NewsItem objects
     private void parseXMLAndStore(XmlPullParser myParser)
     {
         int event;
@@ -101,15 +105,18 @@ public class RSSParserNews
                 String name = myParser.getName();
                 switch (event)
                 {
+                    //on start tag create a new object for <item>
                     case XmlPullParser.START_TAG:
                         if(name.equals("item"))
                         {
                             curItem = new newsItem();
                         }
                         break;
+                    //text tags get the text and set it to a temp location
                     case XmlPullParser.TEXT:
                         text = myParser.getText();
                         break;
+                    //on end tag depending on the name in side <?> set it to that variable in the news object
                     case XmlPullParser.END_TAG:
                         if (curItem != null)
                         {
@@ -139,10 +146,12 @@ public class RSSParserNews
                         break;
                 }
                 event = myParser.next();
+                //parse until end of doc or it reached 10 article
             } while ((event != XmlPullParser.END_DOCUMENT) && (articles.size() < 10));
             mainActivity.updateView();
         }catch (Exception e)
         {
+            //if there is an error print the stack for the dev and pop an error for the user
            e.printStackTrace();
            mainActivity.ErrorView(e.toString());
         }

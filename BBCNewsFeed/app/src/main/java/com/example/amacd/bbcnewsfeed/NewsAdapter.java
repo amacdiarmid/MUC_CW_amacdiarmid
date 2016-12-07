@@ -13,6 +13,7 @@ import android.widget.Button;
  * Created by amacd on 01/11/2016.
  */
 
+//set a list adapter for NewsItem objects
 class NewsAdapter extends ArrayAdapter<newsItem>
 {
     NewsAdapter(Context context, newsItem[] newsItems)
@@ -29,6 +30,7 @@ class NewsAdapter extends ArrayAdapter<newsItem>
         final newsItem news = getItem(position);
         Button button = (Button) customView.findViewById(R.id.NewsButton);
 
+        //set the button to set all the news item variables in an intent to be extracted in a different view and displayed
         button.setText(news.title);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -42,6 +44,7 @@ class NewsAdapter extends ArrayAdapter<newsItem>
                 getContext(). startActivity(activFeed);
             }
         });
+        //set button for consistency
         button.setBackgroundColor(Color.RED);
 
         return customView;

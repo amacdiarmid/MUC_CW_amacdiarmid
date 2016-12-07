@@ -27,6 +27,7 @@ public class CityInfo {
     public WeatherActivity activity;
     public GoogleMap googleMap;
 
+    //set the activity and the map then create the RSSparser object fo weather
     public void FetchFeed(WeatherActivity activity, GoogleMap map)
     {
         this.activity = activity;
@@ -34,11 +35,12 @@ public class CityInfo {
         RSSParserWeather rssParserWeather = new RSSParserWeather(Feed, this);
     }
 
+    //take in the string from the rss feed and split each section into its own variable
     public void SplitFeed(String feed)
     {
         String[] parts = feed.split(" ");
 
-        //get temp from description
+        //find the word temprature then get the previous array elem for the num
         for (int i = 0; i < parts.length; i++)
         {
             if (parts[i].equals("Temperature:"))
@@ -48,7 +50,8 @@ public class CityInfo {
             }
         }
 
-        //get temp from direction
+        //loop the split array to find the wind speed.
+        //parse the word to find the closes direction to the enum and set it
         for (int i = 0; i < parts.length; i++)
         {
             if (parts[i].equals("Wind"))
@@ -150,6 +153,7 @@ public class CityInfo {
             }
         }
 
+        //if error set toast
         try
         {
             activity.addMarker(this);
